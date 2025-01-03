@@ -9,7 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StudioDTO {
     private String name;
-    private String description;
-    private String location;
+    private String username;
+    private String phoneNumber;
+    private String email;
+    private String city;
+    private String Address;
     private String commercialRecord;
+    private String status;
 }

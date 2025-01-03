@@ -1,7 +1,6 @@
 package com.example.focus.Model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
@@ -31,6 +30,7 @@ public class ProfileEditor {
     @OneToOne
     @JoinColumn(name = "editor_id")
     private Editor editor;
+
 
 
     @OneToMany

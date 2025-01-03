@@ -2,6 +2,7 @@ package com.example.focus.Controller;
 
 
 import com.example.focus.DTO.EditorDTO;
+import com.example.focus.DTO.EditorDTOin;
 import com.example.focus.Model.Editor;
 import com.example.focus.Service.EditorService;
 import jakarta.validation.Valid;
@@ -22,14 +23,14 @@ public class EditorController {
         return ResponseEntity.ok(editorDTOS);
     }
 
-    @PostMapping("/add-editor")
-    public ResponseEntity addEditor(@RequestBody @Valid Editor editor) {
+    @PostMapping("/register")
+    public ResponseEntity addEditor(@RequestBody @Valid EditorDTOin editor) {
         editorService.EditorRegistration(editor);
         return ResponseEntity.ok("Editor added successfully");
     }
 
     @PutMapping("/update-editor/{id}")
-    public ResponseEntity updateEditor(@PathVariable Integer id, @RequestBody @Valid Editor editor) {
+    public ResponseEntity updateEditor(@PathVariable Integer id, @RequestBody @Valid EditorDTOin editor) {
         editorService.updateEditor(id, editor);
         return ResponseEntity.ok("Editor updated successfully");
     }

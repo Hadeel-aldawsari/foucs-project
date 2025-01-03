@@ -11,5 +11,4 @@ public class EditorDTO {
     private String phoneNumber;
     private String email;
     private String username;
-    private String password;
 }

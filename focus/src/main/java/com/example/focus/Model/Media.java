@@ -50,5 +50,5 @@ public class Media {
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
-    private Profile profile;
+    private ProfilePhotographer profile;
 }

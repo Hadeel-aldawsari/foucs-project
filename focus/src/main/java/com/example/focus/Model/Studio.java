@@ -14,14 +14,11 @@ import java.util.Set;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class Studio {
-
     @Id
     private Integer id;
 
-
-    @NotEmpty(message = "Please enter studio name")
+//    @NotEmpty(message = "Please enter studio name")
     @Column(columnDefinition = "varchar(30) not null unique")
     private String name;
 
@@ -30,16 +27,30 @@ public class Studio {
     @Column(columnDefinition = "varchar(10) not null unique")
     private String phoneNumber;
 
-    @OneToOne(mappedBy = "photographer", cascade = CascadeType.ALL)
-    private ProfileStudio profile;
+    @NotEmpty(message = "City cannot be empty")
+    @Column(columnDefinition = "varchar(30) not null")
+    private String city;
 
+    @NotEmpty(message = "Please enter studio Address")
+    @Column(columnDefinition = "varchar(60) not null")
+    private String address;
 
+    @NotEmpty(message = "commercialRecord")
+    @Pattern(regexp = "^7\\d{9}$", message = "commercialRecord must start with 7 and be followed by 9 digits")
+    private String commercialRecord;
+
+    @Pattern(regexp = "active|not active|rejected")
+    private String status;
 
 
     @OneToOne
     @MapsId
     @JsonIgnore
     private MyUser myUser;
+
+//    @OneToOne(mappedBy = "studio", cascade = CascadeType.ALL)
+//    private ProfileStudio profile;
+//
     @OneToMany
     private Set<Space> spaces;
 

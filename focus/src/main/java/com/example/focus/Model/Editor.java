@@ -18,6 +18,9 @@ public class Editor {
     @Id
     private Integer id;
 
+    @Column(columnDefinition = "varchar(30) not null")
+    private String name;
+
     @NotEmpty(message = "Please enter your city")
     @Column(columnDefinition = "varchar(40) not null")
     private String city;
@@ -27,14 +30,14 @@ public class Editor {
     @Column(columnDefinition = "varchar(10) not null unique")
     private String phoneNumber;
 
-
-    @OneToOne(mappedBy = "photographer", cascade = CascadeType.ALL)
-    private ProfileEditor profile;
-
-
     @OneToOne
     @MapsId
     @JsonIgnore
     private MyUser myUser;
+
+
+//
+//    @OneToOne(mappedBy = "photographer", cascade = CascadeType.ALL)
+//    private ProfileEditor profile;
 
 }

@@ -1,10 +1,15 @@
 package com.example.focus.Service;
 import com.example.focus.ApiResponse.ApiException;
 import com.example.focus.DTO.*;
-import com.example.focus.Model.BookSpace;
+//import com.example.focus.Model.BookSpace;
+//import com.example.focus.Model.Space;
+import com.example.focus.Model.Editor;
+import com.example.focus.Model.MyUser;
 import com.example.focus.Model.Space;
 import com.example.focus.Model.Studio;
-import com.example.focus.Repository.BookSpaceRepository;
+//import com.example.focus.Repository.BookSpaceRepository;
+//import com.example.focus.Repository.SpaceRepository;
+import com.example.focus.Repository.MyUserRepository;
 import com.example.focus.Repository.SpaceRepository;
 import com.example.focus.Repository.StudioRepository;
 
@@ -17,49 +22,54 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class StudioService {
+    private final MyUserRepository myUserRepository;
     private final StudioRepository studioRepository;
     private final SpaceRepository spaceRepository;
-    private final BookSpaceRepository bookSpaceRepository;
+  //  private final BookSpaceRepository bookSpaceRepository;
 
     public List<StudioDTO> getAllStudios(){
         List<Studio> studios = studioRepository.findAll();
         List<StudioDTO> studioDTOS = new ArrayList<>();
         for (Studio studio : studios){
-            StudioDTO studioDTO = new StudioDTO(studio.getName(),studio.getDescription(),studio.getLocation(),studio.getCommercialRecord());
+            StudioDTO studioDTO = new StudioDTO(
+                    studio.getName(),
+                    studio.getMyUser().getUsername(),
+                    studio.getPhoneNumber(),
+                    studio.getMyUser().getEmail(),
+                    studio.getCity(),
+                    studio.getAddress(),
+                    studio.getCommercialRecord(),
+                    studio.getStatus());
             studioDTOS.add(studioDTO);
         }
         return studioDTOS;
     }
 
     public void registerStudio(StudioDTOIn studioDTOIn){
-        Studio studio = studioRepository.findStudioByUsername(studioDTOIn.getUsername());
-        if(studio != null){
-            throw new ApiException("studio is exists");
-        }
-        Studio studio1 = new Studio();
-        studio1.setName(studioDTOIn.getName());
-        studio1.setPhoneNumber(studioDTOIn.getPhoneNumber());
-        studio1.setEmail(studioDTOIn.getEmail());
-        studio1.setDescription(studioDTOIn.getDescription());
-        studio1.setLocation(studioDTOIn.getLocation());
-        studio1.setCommercialRecord(studioDTOIn.getCommercialRecord());
-        studio1.setUsername(studioDTOIn.getUsername());
-        studio1.setPassword(studioDTOIn.getPassword());
-        studio1.setIsActivated(false);
-        studioRepository.save(studio1);
+//        Studio studio = studioRepository.findStudioByUsername(studioDTOIn.getUsername());
+//        if(studio != null){
+//            throw new ApiException("username is exists");
+//        }
+        MyUser user = new MyUser();
+        user.setUsername(studioDTOIn.getUsername());
+        user.setEmail(studioDTOIn.getEmail());
+        user.setPassword(studioDTOIn.getPassword());
+        user.setRole("STUDIO");
+        myUserRepository.save(user);
+
+        Studio studio=new Studio();
+        studio.setMyUser(user);
+        studio.setCommercialRecord(studioDTOIn.getCommercialRecord());
+        studio.setName(studioDTOIn.getName());
+        studio.setCity(studioDTOIn.getCity());
+        studio.setPhoneNumber(studioDTOIn.getPhoneNumber());
+        studio.setAddress(studioDTOIn.getAddress());
+        studio.setStatus("active");
+        studioRepository.save(studio);
 
     }
 
-    // get spaces
-    public List<SpaceDTO> getAllSpaces(){
-        List<Space> spaces = spaceRepository.findAll();
-        List<SpaceDTO> spaceDTOS = new ArrayList<>();
-        for (Space space : spaces){
-            SpaceDTO spaceDTO = new SpaceDTO(space.getName(),space.getType(),space.getArea(),space.getDescription(),space.getPrice(),space.getStatus(),space.getImage());
-            spaceDTOS.add(spaceDTO);
-        }
-        return spaceDTOS;
-    }
+
 
     // studio add new space
     public void addSpace (Integer studio_id,SpaceDTOIn spaceDTOIn){
@@ -67,12 +77,12 @@ public class StudioService {
         if(studio == null){
             throw new ApiException("studio not found");
         }
-        if (!studio.getIsActivated()){
+        if (!studio.getStatus().equalsIgnoreCase("active") ){
             throw new ApiException("studio is not activated");
         }
         Space space = spaceRepository.findSpaceByName(spaceDTOIn.getName());
         if(space != null){
-            throw new ApiException("space already exists");
+            throw new ApiException("space name already exists");
         }
         Space newSpace = new Space();
         newSpace.setName(spaceDTOIn.getName());
@@ -80,81 +90,82 @@ public class StudioService {
         newSpace.setArea(spaceDTOIn.getArea());
         newSpace.setDescription(spaceDTOIn.getDescription());
         newSpace.setPrice(spaceDTOIn.getPrice());
-        newSpace.setStatus(spaceDTOIn.getStatus());
+        newSpace.setStatus("active");
         newSpace.setImage(spaceDTOIn.getImage());
+        newSpace.setStudio(studio);
         spaceRepository.save(newSpace);
 
     }
 
-    // studio delete space
-    public void deleteSpace (Integer studio_id,String space_name){
-        Studio studio = studioRepository.findStudioById(studio_id);
-        if(studio == null){
-            throw new ApiException("studio not found");
-        }
-        if (!studio.getIsActivated()){
-            throw new ApiException("studio is not activated");
-        }
-        Space space = spaceRepository.findSpaceByName(space_name);
-        if(space == null){
-            throw new ApiException("space not found");
-        }
-        spaceRepository.delete(space);
-
-    }
-
-    // update space
-    public void updateSpace (Integer studio_id,SpaceDTOIn spaceDTOIn){
-        Studio studio = studioRepository.findStudioById(studio_id);
-        if(studio == null){
-            throw new ApiException("studio not found");
-        }
-        if (!studio.getIsActivated()){
-            throw new ApiException("studio is not activated");
-        }
-        Space space = spaceRepository.findSpaceByName(spaceDTOIn.getName());
-        if(space == null){
-            throw new ApiException("space not found");
-        }
-        space.setName(spaceDTOIn.getName());
-        space.setType(spaceDTOIn.getType());
-        space.setArea(spaceDTOIn.getArea());
-        space.setDescription(spaceDTOIn.getDescription());
-        space.setPrice(spaceDTOIn.getPrice());
-        space.setStatus(spaceDTOIn.getStatus());
-        space.setImage(spaceDTOIn.getImage());
-        spaceRepository.save(space);
-
-    }
-
-    public List<RentalStudioRequestDTO> getSpaces(){
-        List<BookSpace> rsr = bookSpaceRepository.findAll();
-        List<RentalStudioRequestDTO> rsrDTO = new ArrayList<>();
-        for (BookSpace rs : rsr){
-            RentalStudioRequestDTO rsDTO = new RentalStudioRequestDTO(rs.getStartDate(),rs.getEndDate(),rs.getStatus(),rs.getNote());
-            rsrDTO.add(rsDTO);
-
-        }
-        return rsrDTO;
-    }
-
-    // studio can accept or reject the request from photographer
-    public void acceptOrRejectRequest(Integer studio_id,Integer request_id,String response){
-        Studio studio = studioRepository.findStudioById(studio_id);
-        if(studio == null){
-            throw new ApiException("studio not found");
-        }
-        if(!studio.getIsActivated()){
-            throw new ApiException("studio is not activated");
-        }
-        BookSpace sr = bookSpaceRepository.findRentalStudioRequestById(request_id);
-        if(sr == null){
-            throw new ApiException("request not found");
-        }
-
-        sr.setStatus(response);
-
-    }
+//    // studio delete space
+//    public void deleteSpace (Integer studio_id,String space_name){
+//        Studio studio = studioRepository.findStudioById(studio_id);
+//        if(studio == null){
+//            throw new ApiException("studio not found");
+//        }
+//        if (!studio.getIsActivated()){
+//            throw new ApiException("studio is not activated");
+//        }
+//        Space space = spaceRepository.findSpaceByName(space_name);
+//        if(space == null){
+//            throw new ApiException("space not found");
+//        }
+//        spaceRepository.delete(space);
+//
+//    }
+//
+//    // update space
+//    public void updateSpace (Integer studio_id,SpaceDTOIn spaceDTOIn){
+//        Studio studio = studioRepository.findStudioById(studio_id);
+//        if(studio == null){
+//            throw new ApiException("studio not found");
+//        }
+//        if (!studio.getIsActivated()){
+//            throw new ApiException("studio is not activated");
+//        }
+//        Space space = spaceRepository.findSpaceByName(spaceDTOIn.getName());
+//        if(space == null){
+//            throw new ApiException("space not found");
+//        }
+//        space.setName(spaceDTOIn.getName());
+//        space.setType(spaceDTOIn.getType());
+//        space.setArea(spaceDTOIn.getArea());
+//        space.setDescription(spaceDTOIn.getDescription());
+//        space.setPrice(spaceDTOIn.getPrice());
+//        space.setStatus(spaceDTOIn.getStatus());
+//        space.setImage(spaceDTOIn.getImage());
+//        spaceRepository.save(space);
+//
+//    }
+//
+//    public List<RentalStudioRequestDTO> getSpaces(){
+//        List<BookSpace> rsr = bookSpaceRepository.findAll();
+//        List<RentalStudioRequestDTO> rsrDTO = new ArrayList<>();
+//        for (BookSpace rs : rsr){
+//            RentalStudioRequestDTO rsDTO = new RentalStudioRequestDTO(rs.getStartDate(),rs.getEndDate(),rs.getStatus(),rs.getNote());
+//            rsrDTO.add(rsDTO);
+//
+//        }
+//        return rsrDTO;
+//    }
+//
+//    // studio can accept or reject the request from photographer
+//    public void acceptOrRejectRequest(Integer studio_id,Integer request_id,String response){
+//        Studio studio = studioRepository.findStudioById(studio_id);
+//        if(studio == null){
+//            throw new ApiException("studio not found");
+//        }
+//        if(!studio.getIsActivated()){
+//            throw new ApiException("studio is not activated");
+//        }
+//        BookSpace sr = bookSpaceRepository.findRentalStudioRequestById(request_id);
+//        if(sr == null){
+//            throw new ApiException("request not found");
+//        }
+//
+//        sr.setStatus(response);
+//
+//    }
 
 
 }

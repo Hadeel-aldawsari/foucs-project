@@ -1,9 +1,7 @@
 package com.example.focus.Controller;
 
 import com.example.focus.ApiResponse.ApiResponse;
-import com.example.focus.Model.Photographer;
-import com.example.focus.Model.RentTools;
-import com.example.focus.Model.Tool;
+import com.example.focus.DTO.PhotographerDTOin;
 import com.example.focus.Service.PhotographerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +21,13 @@ public class PhotographerController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity PhotographerRegistration(@RequestBody @Valid Photographer photographer){
+    public ResponseEntity PhotographerRegistration(@RequestBody @Valid PhotographerDTOin photographer){
         photographerService.PhotographerRegistration(photographer);
         return ResponseEntity.status(200).body(new ApiResponse("photographer added"));
     }
 
     @PutMapping("/update-photographer/{id}")
-    public ResponseEntity updatePhotographer(@PathVariable Integer id, @RequestBody @Valid Photographer photographer){
+    public ResponseEntity updatePhotographer(@PathVariable Integer id, @RequestBody @Valid PhotographerDTOin photographer){
         photographerService.updatePhotographer(id,photographer);
         return ResponseEntity.status(200).body(new ApiResponse("photographer updated"));
     }
@@ -40,11 +38,11 @@ public class PhotographerController {
         return ResponseEntity.status(200).body(new ApiResponse("photographer deleted"));
     }
 
-    @PostMapping("/rent-tool/{photographer_id}/{toold_id}")
-    public ResponseEntity rentTool(@PathVariable Integer photographer_id,@PathVariable Integer tool_id,@RequestBody @Valid RentTools rentTool){
-        photographerService.rentTool(photographer_id,tool_id,rentTool);
-        return ResponseEntity.status(200).body(new ApiResponse("tool rented successfully"));
-    }
+//    @PostMapping("/rent-tool/{photographer_id}/{toold_id}")
+//    public ResponseEntity rentTool(@PathVariable Integer photographer_id,@PathVariable Integer tool_id,@RequestBody @Valid RentTools rentTool){
+//        photographerService.rentTool(photographer_id,tool_id,rentTool);
+//        return ResponseEntity.status(200).body(new ApiResponse("tool rented successfully"));
+//    }
 
 
 }

@@ -17,9 +17,11 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 public class Photographer {
-
     @Id
     private Integer id;
+
+    @Column(columnDefinition = "varchar(30) not null")
+    private String name;
 
     @NotEmpty(message = "City cannot be empty")
     @Column(columnDefinition = "varchar(30) not null")
@@ -30,20 +32,22 @@ public class Photographer {
     @Column(columnDefinition = "varchar(40) not null unique")
     private String phoneNumber;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "photographer")
-    private Set<Tool> tools;
-
-    @OneToOne(mappedBy = "photographer", cascade = CascadeType.ALL)
-    private ProfilePhotographer profile;
-
-    @OneToMany(mappedBy = "renter")
-    private Set<RentTools> myOrders;  // Orders for tools this photographer rents from others
-
-    @OneToMany(mappedBy = "owner")
-    private Set<RentTools> rentalTools; // Rental transactions for tools this photographer owns
     @OneToOne
     @MapsId
     @JsonIgnore
     private MyUser myUser;
+
+//    @OneToMany(cascade = CascadeType.ALL,mappedBy = "photographer")
+//    private Set<Tool> tools;
+//
+//    @OneToOne(mappedBy = "photographer", cascade = CascadeType.ALL)
+//    private ProfilePhotographer profile;
+//
+//    @OneToMany(mappedBy = "renter")
+//    private Set<RentTools> myOrders;  // Orders for tools this photographer rents from others
+//
+//    @OneToMany(mappedBy = "owner")
+//    private Set<RentTools> rentalTools; // Rental transactions for tools this photographer owns
+
 
 }

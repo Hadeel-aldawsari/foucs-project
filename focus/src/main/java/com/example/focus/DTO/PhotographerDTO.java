@@ -6,14 +6,9 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class PhotographerDTO {
-    private String username;
     private String name;
-
-    private String city;
-
+    private String username;
     private String email;
+    private String city;
     private String phoneNumber;
-
-
-
 }
