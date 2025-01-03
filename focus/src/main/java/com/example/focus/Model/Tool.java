@@ -42,7 +42,8 @@ public class Tool {
 
     @NotEmpty(message = "Condition cannot be empty")
     @Pattern(regexp = "^(new|used)$", message = "Condition must be 'new' or 'used'")
-    private String condition;
+    @Column(columnDefinition = "varchar(4) not null")
+    private String ToolCondition;
 
     @DecimalMin(value = "0.0", inclusive = false, message = "Rental price must be greater than 0")
     @Column(columnDefinition = "decimal not null")
@@ -50,8 +51,8 @@ public class Tool {
 
     @NotEmpty(message = "Image URL cannot be empty")
     @Pattern(regexp = "^(https?|ftp)://[^\s/$.?#].[^\s]*$", message = "Image URL must be a valid URL")
-    @Column(columnDefinition = "varchar not null")
-    private String imageUrl;
+    @Column
+    private String imageURL;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "photographer_id")

@@ -27,9 +27,9 @@ public class ToolService {
                     tool.getDescription(),
                     tool.getCategory(),
                     tool.getBrand(),
-                    tool.getCondition(),
+                    tool.getToolCondition(),
                     tool.getRentalPrice(),
-                    tool.getImageUrl(),
+                    tool.getImageURL(),
                     tool.getPhotographer().getId()
 
             );
@@ -57,9 +57,9 @@ public class ToolService {
             existingTool.setDescription(tool.getDescription());
             existingTool.setCategory(tool.getCategory());
             existingTool.setBrand(tool.getBrand());
-            existingTool.setCondition(tool.getCondition());
+            existingTool.setToolCondition(tool.getToolCondition());
             existingTool.setRentalPrice(tool.getRentalPrice());
-            existingTool.setImageUrl(tool.getImageUrl());
+            existingTool.setImageURL(tool.getImageURL());
             toolRepository.save(existingTool);
         } else {
             throw new ApiException("Tool not found");

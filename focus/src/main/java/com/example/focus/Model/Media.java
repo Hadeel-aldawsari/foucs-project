@@ -37,13 +37,15 @@ public class Media {
 
     @NotEmpty(message = "Media URL is required")
     @URL(message = "Invalid media URL")
-    @Column(columnDefinition = "varchar not null")
-    private String mediaUrl;
+    @Column(columnDefinition = "varchar(255) not null")
+    private String mediaURL;
 
     @ManyToOne
+    @JoinColumn(name = "editor_id")
     private Editor editor;
 
     @ManyToOne
+    @JoinColumn(name = "photographer_id")
     private Photographer photographer;
 
 
