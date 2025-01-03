@@ -32,7 +32,7 @@ public class Media {
     private LocalDateTime uploadDate;
 
     @AssertTrue(message = "visibility ")
-    @Column(columnDefinition = "varchar(5) not null")
+    @Column(columnDefinition = "boolean not null")
     private Boolean visibility;
 
     @NotEmpty(message = "Media URL is required")
